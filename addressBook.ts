@@ -13,7 +13,8 @@ class AddressBookMain {
 
     private displayAddressBook(): void {
         console.log("Welcome to Address Book Program");
-        this.addContact();
+        // this.addContact();  //addcontact can only add single contact
+        this.askToAddContact();
     }
 
     private rl = readline.createInterface({
@@ -21,7 +22,28 @@ class AddressBookMain {
         output: process.stdout
     });
 
-    addContact(): void {
+    private showAllContacts(): void {
+        console.log(`You have entered ${this.contacts.length} contact`)
+        this.contacts.forEach((contact, index) => {
+            console.log(`\n#${index + 1}`);
+            contact.displayContact();
+        });
+    }
+
+    private askToAddContact(): void {
+        this.rl.question("Do You want to add a new contact (y/n) : ", (answer) => {
+            if (answer === 'Y' || answer === 'y') {
+                this.addContact();
+                this.askToAddContact();
+            }
+            else {
+                this.showAllContacts();
+                this.rl.close();
+            }
+        });
+    }
+
+    private addContact(): void {
         const questions: string[] = [
             "First Name : ",
             "Last Name : ",
