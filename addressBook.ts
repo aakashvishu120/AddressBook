@@ -44,6 +44,7 @@ class AddressBookMain {
                     break;
                 case '4':
                     console.log(`You have selected ${answer} for Delete contact`)
+                    this.deleteContact();
                     break;
 
                 default:
@@ -141,6 +142,24 @@ class AddressBookMain {
                 });
             }
             askEdit(0);
+        });
+    }
+
+    private deleteContact(): void {
+        this.rl.question("Enter firstname of the person to delete: ", (name) => {
+            const index = this.contacts.findIndex(
+                (person) => person.firstname.toLowerCase() === name.trim().toLowerCase()
+            );
+
+            if (index === -1) {
+                console.log("Contact not found.");
+            } else {
+                const deletedContact = this.contacts.splice(index, 1)[0];
+                console.log("Contact deleted successfully:");
+                deletedContact.displayContact();
+            }
+
+            this.mainMenu();
         });
     }
 }
