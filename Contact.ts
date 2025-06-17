@@ -12,6 +12,7 @@ export class Contact {
 
     displayContact(){
         console.log(`
+            Display Result : 
             Name : ${this.firstname} ${this.lastname}
             Address : ${this.address} ${this.city} ${this.state} ${this.zip}             
             Phone : ${this.phone}             
