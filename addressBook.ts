@@ -7,7 +7,6 @@ export class AddressBookMain {
     private contacts: Contact[] = []
 
     constructor(public rl: readline.Interface, private goBackToMainMenu: () => void) { }
-
     // constructor() {
     // this.displayAddressBook();
     // }
@@ -98,12 +97,23 @@ export class AddressBookMain {
             if (index === questions.length) {
                 //array destructuring
                 const [firstname, lastname, address, city, state, zip, phone, email] = answers;
+                
+                //duplicate entry check
+                const duplicate = this.contacts.find(c =>
+                    c.firstname.toLowerCase() === firstname.toLowerCase() &&
+                    c.lastname.toLowerCase() === lastname.toLowerCase()
+                );
 
-                //creating a contact
-                const contact = new Contact(firstname, lastname, address, city, state, zip, phone, email);
-                this.contacts.push(contact);
-                console.log("contact added succesfully")
-                contact.displayContact();
+                if (duplicate) {
+                    console.log("Duplicate contact found. Cannot add the same person again.");
+                } 
+                else {
+                    //creating a contact
+                    const contact = new Contact(firstname, lastname, address, city, state, zip, phone, email);
+                    this.contacts.push(contact);
+                    console.log("contact added succesfully")
+                    contact.displayContact();
+                }
                 this.mainMenu();
                 return;
             }
