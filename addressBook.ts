@@ -97,7 +97,7 @@ export class AddressBookMain {
             if (index === questions.length) {
                 //array destructuring
                 const [firstname, lastname, address, city, state, zip, phone, email] = answers;
-                
+
                 //duplicate entry check
                 const duplicate = this.contacts.find(c =>
                     c.firstname.toLowerCase() === firstname.toLowerCase() &&
@@ -106,7 +106,7 @@ export class AddressBookMain {
 
                 if (duplicate) {
                     console.log("Duplicate contact found. Cannot add the same person again.");
-                } 
+                }
                 else {
                     //creating a contact
                     const contact = new Contact(firstname, lastname, address, city, state, zip, phone, email);
@@ -180,6 +180,12 @@ export class AddressBookMain {
 
             this.mainMenu();
         });
+    }
+
+    public searchByCityOrState(keyword: string): Contact[] {
+        return this.contacts.filter(contact =>
+            contact.city.toLowerCase() === keyword || contact.state.toLowerCase() === keyword
+        );
     }
 }
 

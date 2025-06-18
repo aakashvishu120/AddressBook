@@ -24,7 +24,8 @@ export class AddressBookSystem {
         console.log(`
             Press 1 for Create a new Address Book
             Press 2 Select existing Address Book
-            Press 3 for exit
+            Press 3 for Search Person by city or state
+            Press 4 for exit
         `);
 
         this.rl.question("Enter Your Choice: ", (choice) => {
@@ -70,6 +71,29 @@ export class AddressBookSystem {
                     })
                     break;
                 case "3":
+                    this.rl.question("Enter City or State to search: ", (input) => {
+                        const keyword = input.trim().toLowerCase();
+                        let found = false;
+
+                        for (const [bookName, addressBook] of Object.entries(this.addressBooks)) {
+                            const results = addressBook.searchByCityOrState(keyword);
+                            if (results.length > 0) {
+                                found = true;
+                                console.log(`\nAddress Book: ${bookName}`);
+                                results.forEach((contact, i) => {
+                                    console.log(`\n#${i + 1}`);
+                                    contact.displayContact();
+                                });
+                            }
+                        }
+
+                        if (!found) {
+                            console.log("No contacts found in any address book for given city/state.");
+                        }
+                        this.selectOrCreateAddressBook();
+                    });
+                    break;
+                case "4":
                     console.log("Exiting...");
                     this.rl.close();
                     break;
