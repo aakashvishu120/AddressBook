@@ -1,6 +1,7 @@
 import { Contact } from "./Contact";
 import * as readline from "readline";
 
+type SortableField = "city" | "state" | "zip" | "firstname";  //this must be declare outside class as per typescript rule
 export class AddressBookMain {
 
     //To store all contacts
@@ -25,6 +26,7 @@ export class AddressBookMain {
             Press 4 for Delete contact
             Press 5 Back to Main Menu
             Press 6 for sort the contact by firstname
+            Press 7 for sort the contact by city/state/zip
             `);
 
         this.rl.question("Choose any option from (1-6) : ", (answer) => {
@@ -52,6 +54,10 @@ export class AddressBookMain {
                 case '6':
                     console.log(`You have selected ${answer} for sort contact by First Name`)
                     this.sortContactByName();
+                    break;
+                case '7':
+                    console.log(`You have selected ${answer} for sort contact by city/state/zip`)
+                    this.sortContactsByField();
                     break;
 
 
@@ -194,7 +200,7 @@ export class AddressBookMain {
         );
     }
 
-    public sortContactByName(): void {
+    private sortContactByName(): void {
         if (this.contacts.length === 0) {
             console.log("No contact found for sorting")
         }
@@ -202,22 +208,56 @@ export class AddressBookMain {
             console.log("Only 1 contact is present , already sorted")
         }
         else {
-            this.contacts.sort((a, b) => {
-                const nameA = a.firstname.toLowerCase();
-                const nameB = b.firstname.toLowerCase();
-                return nameA.localeCompare(nameB);
-            })
-
-            console.log("Contacts sorted alphabetically by first name:");
-            this.contacts.forEach((contact, index) => {
-                console.log(`\n#${index + 1}`);
-                contact.displayContact();
-            });
+            this.sortLogic("firstname")
         }
-
-        this.mainMenu();
         return;
     }
+
+
+    private sortContactsByField(): void {
+        console.log(`
+        Sort Contacts By:
+        1. City
+        2. State
+        3. Zip
+    `);
+
+        this.rl.question("Choose sorting field (1-3): ", (choice) => {
+            let field: SortableField;
+
+            switch (choice.trim()) {
+                case '1':
+                    field = "city";
+                    break;
+                case '2':
+                    field = "state";
+                    break;
+                case '3':
+                    field = "zip";
+                    break;
+                default:
+                    console.log("Invalid choice. Returning to menu...");
+                    this.mainMenu();
+                    return;
+            }
+            this.sortLogic(field);
+        });
+    }
+
+    private sortLogic(field: SortableField): void {
+        this.contacts.sort((a, b) =>
+            a[field].toLowerCase().localeCompare(b[field].toLowerCase())
+        );
+
+        console.log(`Contacts sorted by ${field.charAt(0).toUpperCase() + field.slice(1)}:`);
+        this.contacts.forEach((contact, index) => {
+            console.log(`\n#${index + 1}`);
+            contact.displayContact();
+        });
+
+        this.mainMenu();
+    }
+
 }
 
 

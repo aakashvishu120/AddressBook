@@ -13,8 +13,12 @@ export class Contact {
     displayContact() {
         console.log(`
             Display Result : 
-            Name : ${this.firstname} ${this.lastname}
-            Address : ${this.address} ${this.city} ${this.state} ${this.zip}             
+            First Name : ${this.firstname} 
+            Last Name : ${this.lastname}
+            Address : ${this.address}
+            City : ${this.city}
+            State : ${this.state}
+            Zip : ${this.zip}             
             Phone : ${this.phone}             
             Email : ${this.email}
         `);
