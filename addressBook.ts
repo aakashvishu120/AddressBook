@@ -187,6 +187,11 @@ export class AddressBookMain {
             contact.city.toLowerCase() === keyword || contact.state.toLowerCase() === keyword
         );
     }
+
+    public countByCityOrState(answer: string): number {
+        return this.contacts.filter(contact =>
+            contact.city.toLowerCase() === answer || contact.state.toLowerCase() === answer).length;
+    }
 }
 
 

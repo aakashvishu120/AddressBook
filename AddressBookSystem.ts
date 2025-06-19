@@ -1,6 +1,7 @@
 import * as readline from "readline";
 import { Contact } from "./Contact";
 import { AddressBookMain } from "./addressBook";
+import { count } from "console";
 
 export class AddressBookSystem {
     private addressBooks: { [key: string]: AddressBookMain } = {};
@@ -25,7 +26,8 @@ export class AddressBookSystem {
             Press 1 for Create a new Address Book
             Press 2 Select existing Address Book
             Press 3 for Search Person by city or state
-            Press 4 for exit
+            Press 4 for Count the contact by city or state
+            Press 5 for exit
         `);
 
         this.rl.question("Enter Your Choice: ", (choice) => {
@@ -94,6 +96,28 @@ export class AddressBookSystem {
                     });
                     break;
                 case "4":
+                    this.rl.question("enter the state or city to count contacts : ", (input) => {
+                        var answer: string = input.trim().toLowerCase();
+                        var totalCount: number = 0;
+
+                        for (const [bookName, bookObj] of Object.entries(this.addressBooks)) {
+                            const countBySingleAdressBook = bookObj.countByCityOrState(answer);
+                            if (countBySingleAdressBook > 0) {
+                                console.log(`Contact count Found in ${bookName} i.e. ${countBySingleAdressBook}`)
+                                totalCount += countBySingleAdressBook;
+                            }
+                        }
+
+                        if (totalCount === 0) {
+                            console.log("No Contact Found");
+                        }
+                        else {
+                            console.log(`Total contacts : ${totalCount} `)
+                        }
+                        this.selectOrCreateAddressBook();
+                    })
+                    break;
+                case "5":
                     console.log("Exiting...");
                     this.rl.close();
                     break;
