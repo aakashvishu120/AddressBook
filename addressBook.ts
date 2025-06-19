@@ -1,5 +1,7 @@
 import { Contact } from "./Contact";
 import * as readline from "readline";
+import * as fs from 'fs';
+
 
 type SortableField = "city" | "state" | "zip" | "firstname";  //this must be declare outside class as per typescript rule
 export class AddressBookMain {
@@ -29,7 +31,7 @@ export class AddressBookMain {
             Press 7 for sort the contact by city/state/zip
             `);
 
-        this.rl.question("Choose any option from (1-6) : ", (answer) => {
+        this.rl.question("Choose any option : ", (answer) => {
             switch (answer.trim()) {
                 case '1':
                     console.log(`You have selected ${answer} for Add contact`)
@@ -257,6 +259,75 @@ export class AddressBookMain {
 
         this.mainMenu();
     }
+
+    public saveToTextFile(bookName: string): void {
+        if (this.contacts.length === 0) {
+            console.log(`No contacts to save in Address Book: ${bookName}`);
+            this.mainMenu();
+            return;
+        }
+
+        const filename = `${bookName}.txt`;
+        let content = '';
+
+        this.contacts.forEach((contact, index) => {
+            content += `Contact ${index + 1}\n`;
+            content += `First Name: ${contact.firstname}\n`;
+            content += `Last Name: ${contact.lastname}\n`;
+            content += `Address: ${contact.address}\n`;
+            content += `City: ${contact.city}\n`;
+            content += `State: ${contact.state}\n`;
+            content += `Zip: ${contact.zip}\n`;
+            content += `Phone: ${contact.phone}\n`;
+            content += `Email: ${contact.email}\n`;
+            content += `---\n`;
+        });
+
+        fs.writeFileSync(filename, content, 'utf8');
+        console.log(`Contacts saved to file: ${filename}`);
+        this.mainMenu();
+    }
+
+    public loadFromTextFile(bookName: string): void {
+        const filename = `${bookName}.txt`;
+
+        if (!fs.existsSync(filename)) {
+            console.log(`File ${filename} not found. Cannot load contacts.`);
+            this.mainMenu();
+            return;
+        }
+
+        const data = fs.readFileSync(filename, 'utf8');
+        const entries = data.split('---\n').filter(e => e.trim() !== '');
+
+        this.contacts = entries.map(entry => {
+            const lines = entry.split('\n');
+            const firstName = lines.find(line => line.startsWith('First Name:')) || '';
+            const lastName = lines.find(line => line.startsWith('Last Name:')) || '';
+            const address = lines.find(line => line.startsWith('Address:')) || '';
+            const city = lines.find(line => line.startsWith('City:')) || '';
+            const state = lines.find(line => line.startsWith('State:')) || '';
+            const zip = lines.find(line => line.startsWith('Zip:')) || '';
+            const phone = lines.find(line => line.startsWith('Phone:')) || '';
+            const email = lines.find(line => line.startsWith('Email:')) || '';
+
+            return new Contact(
+                firstName || '',
+                lastName || '',
+                address || '',
+                city || '',
+                state || '',
+                zip || '',
+                phone || '',
+                email || ''
+            );
+        });
+
+        console.log(`Contacts loaded into '${bookName}' from file: ${filename}`);
+        this.mainMenu();
+    }
+
+
 
 }
 

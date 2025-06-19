@@ -26,6 +26,8 @@ export class AddressBookSystem {
             Press 2 Select existing Address Book
             Press 3 for Search Person by city or state
             Press 4 for exit
+            Press 5 Save Address Book to File
+            Press 6 Load Address Book from File
         `);
 
         this.rl.question("Enter Your Choice: ", (choice) => {
@@ -96,6 +98,25 @@ export class AddressBookSystem {
                 case "4":
                     console.log("Exiting...");
                     this.rl.close();
+                    break;
+
+                case "5":
+                    if (this.currentBookName && this.addressBooks[this.currentBookName]) {
+                        this.addressBooks[this.currentBookName].saveToTextFile(this.currentBookName);
+                    } else {
+                        console.log("No address book selected.");
+                        this.selectOrCreateAddressBook();
+                    }
+                    break;
+
+                case "6":
+                    this.rl.question("Enter the name of the Address Book to load from file: ", (bookName) => {
+                        if (!this.addressBooks[bookName]) {
+                            this.addressBooks[bookName] = new AddressBookMain(this.rl, () => this.selectOrCreateAddressBook());
+                        }
+                        this.currentBookName = bookName;
+                        this.addressBooks[bookName].loadFromTextFile(bookName);
+                    });
                     break;
 
                 default:
