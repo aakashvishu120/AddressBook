@@ -8,11 +8,7 @@ export class AddressBookMain {
 
     //To store all contacts
     private contacts: Contact[] = []
-
     constructor(public rl: readline.Interface, private goBackToMainMenu: () => void) { }
-    // constructor() {
-    // this.displayAddressBook();
-    // }
 
     public displayAddressBook(): void {
         console.log("Welcome to Address Book");
@@ -61,28 +57,12 @@ export class AddressBookMain {
                     console.log(`You have selected ${answer} for sort contact by city/state/zip`)
                     this.sortContactsByField();
                     break;
-
-
-                //constructor call will initialised rl and echos/repetitive inputs will appear on console
-                // case '5':
-                //     console.log(`Returning to Main Menu`)
-                //     const ref = require('./AddressBookSystem');
-                //     new ref.AddressBookSystem();  
-                //     //creation of object will insitised constructor and flow goes to AddBookSystem
-                //     break;    
-
                 default:
                     console.log(`invalid option`)
                     break;
             }
         });
     }
-
-    // AddressBookSystem also has one readline stream, input will duplicate 
-    // private rl = readline.createInterface({
-    //     input: process.stdin,
-    //     output: process.stdout
-    // });
 
     private showAllContacts(): void {
         console.log(`You have entered ${this.contacts.length} contact`)
@@ -326,11 +306,5 @@ export class AddressBookMain {
         console.log(`Contacts loaded into '${bookName}' from file: ${filename}`);
         this.mainMenu();
     }
-
-
-
 }
 
-
-//To Display the welcome message
-// const addressBook = new AddressBookMain();
