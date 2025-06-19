@@ -24,9 +24,10 @@ export class AddressBookMain {
             Press 3 for Edit contact
             Press 4 for Delete contact
             Press 5 Back to Main Menu
+            Press 6 for sort the contact by firstname
             `);
 
-        this.rl.question("Choose any option from (1-5) : ", (answer) => {
+        this.rl.question("Choose any option from (1-6) : ", (answer) => {
             switch (answer.trim()) {
                 case '1':
                     console.log(`You have selected ${answer} for Add contact`)
@@ -48,6 +49,11 @@ export class AddressBookMain {
                     console.log("Returning to main menu...\n");
                     this.goBackToMainMenu(); // FIXED: avoid new instance
                     break;
+                case '6':
+                    console.log(`You have selected ${answer} for sort contact by First Name`)
+                    this.sortContactByName();
+                    break;
+
 
                 //constructor call will initialised rl and echos/repetitive inputs will appear on console
                 // case '5':
@@ -186,6 +192,31 @@ export class AddressBookMain {
         return this.contacts.filter(contact =>
             contact.city.toLowerCase() === keyword || contact.state.toLowerCase() === keyword
         );
+    }
+
+    public sortContactByName(): void {
+        if (this.contacts.length === 0) {
+            console.log("No contact found for sorting")
+        }
+        else if (this.contacts.length === 1) {
+            console.log("Only 1 contact is present , already sorted")
+        }
+        else {
+            this.contacts.sort((a, b) => {
+                const nameA = a.firstname.toLowerCase();
+                const nameB = b.firstname.toLowerCase();
+                return nameA.localeCompare(nameB);
+            })
+
+            console.log("Contacts sorted alphabetically by first name:");
+            this.contacts.forEach((contact, index) => {
+                console.log(`\n#${index + 1}`);
+                contact.displayContact();
+            });
+        }
+
+        this.mainMenu();
+        return;
     }
 }
 
