@@ -358,5 +358,56 @@ export class AddressBookMain {
         console.log(`Contacts loaded into '${bookName}' from CSV file: ${filename}`);
         this.mainMenu();
     }
+
+    public saveToJSONFile(bookName: string): void {
+        if (this.contacts.length === 0) {
+            console.log(`No contacts to save in Address Book: ${bookName}`);
+            this.mainMenu();
+            return;
+        }
+
+        const filename = `${bookName}.json`;
+        const data = JSON.stringify(this.contacts, null, 2); // Pretty print
+
+        fs.writeFileSync(filename, data, 'utf8');
+        console.log(`Contacts saved to JSON file: ${filename}`);
+        this.mainMenu();
+
+    }
+
+    public loadFromJSONFile(bookName: string): void {
+        const filename = `${bookName}.json`;
+
+        if (!fs.existsSync(filename)) {
+            console.log(`File ${filename} not found. Cannot load contacts.`);
+            this.mainMenu();
+            return;
+        }
+
+        const data = fs.readFileSync(filename, 'utf8');
+        const rawData = fs.readFileSync(filename, 'utf8');
+
+        try {
+            const jsonContacts = JSON.parse(rawData);
+
+            // Map plain objects to Contact instances
+            this.contacts = jsonContacts.map((obj: any) => new Contact(
+                obj.firstname || "",
+                obj.lastname || "",
+                obj.address || "",
+                obj.city || "",
+                obj.state || "",
+                obj.zip || "",
+                obj.phone || "",
+                obj.email || ""
+            ));
+
+            console.log(`Contacts loaded into '${bookName}' from JSON file: ${filename}`);
+        } catch (error) {
+            console.log("Error parsing JSON file:", error);
+        }
+
+        this.mainMenu();
+    }
 }
 

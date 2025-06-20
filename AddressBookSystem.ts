@@ -30,6 +30,8 @@ export class AddressBookSystem {
             Press 6 Load Address Book from File
             Press 7 Save Address Book to CSV
             press 8 Load Address Book from CSV
+            Press 9 Save Address Book to JSON
+            press 10 Load Address Book from JSON
         `);
 
         this.rl.question("Enter Your Choice: ", (choice) => {
@@ -58,6 +60,13 @@ export class AddressBookSystem {
                 case "8":
                     this.loadAddressBookFromCSV();
                     break;
+                case "9":
+                    this.saveAddressBookToJSON();
+                    break;
+                case "10":
+                    this.loadAddressBookFromJSON();
+                    break;
+
 
                 default:
                     console.log("Invalid Input")
@@ -157,8 +166,8 @@ export class AddressBookSystem {
         });
     }
 
-    private saveAddressBookToCSV(): void{
-         if (this.currentBookName && this.addressBooks[this.currentBookName]) {
+    private saveAddressBookToCSV(): void {
+        if (this.currentBookName && this.addressBooks[this.currentBookName]) {
             this.addressBooks[this.currentBookName].saveToCSVFile(this.currentBookName);
         } else {
             console.log("No address book selected.");
@@ -166,13 +175,32 @@ export class AddressBookSystem {
         }
     }
 
-    private loadAddressBookFromCSV() : void{
+    private loadAddressBookFromCSV(): void {
         this.rl.question("Enter the name of the Address Book to load from CSV: ", (bookName) => {
             if (!this.addressBooks[bookName]) {
                 this.addressBooks[bookName] = new AddressBookMain(this.rl, () => this.selectOrCreateAddressBook());
             }
             this.currentBookName = bookName;
             this.addressBooks[bookName].loadFromCSVFile(bookName);
+        });
+    }
+
+    private saveAddressBookToJSON(): void {
+        if (this.currentBookName && this.addressBooks[this.currentBookName]) {
+            this.addressBooks[this.currentBookName].saveToJSONFile(this.currentBookName);
+        } else {
+            console.log("No address book selected.");
+            this.selectOrCreateAddressBook();
+        }
+    }
+
+    private loadAddressBookFromJSON(): void {
+        this.rl.question("Enter the name of the Address Book to load from JSON: ", (bookName) => {
+            if (!this.addressBooks[bookName]) {
+                this.addressBooks[bookName] = new AddressBookMain(this.rl, () => this.selectOrCreateAddressBook());
+            }
+            this.currentBookName = bookName;
+            this.addressBooks[bookName].loadFromJSONFile(bookName);
         });
     }
 }
