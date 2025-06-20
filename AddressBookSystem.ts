@@ -28,6 +28,8 @@ export class AddressBookSystem {
             Press 4 for exit
             Press 5 Save Address Book to File
             Press 6 Load Address Book from File
+            Press 7 Save Address Book to CSV
+            press 8 Load Address Book from CSV
         `);
 
         this.rl.question("Enter Your Choice: ", (choice) => {
@@ -47,9 +49,14 @@ export class AddressBookSystem {
                 case "5":
                     this.saveAddressBookToFile();
                     break;
-
                 case "6":
                     this.loadAddressBookFromFile();
+                    break;
+                case "7":
+                    this.saveAddressBookToCSV();
+                    break;
+                case "8":
+                    this.loadAddressBookFromCSV();
                     break;
 
                 default:
@@ -147,6 +154,25 @@ export class AddressBookSystem {
             }
             this.currentBookName = bookName;
             this.addressBooks[bookName].loadFromTextFile(bookName);
+        });
+    }
+
+    private saveAddressBookToCSV(): void{
+         if (this.currentBookName && this.addressBooks[this.currentBookName]) {
+            this.addressBooks[this.currentBookName].saveToCSVFile(this.currentBookName);
+        } else {
+            console.log("No address book selected.");
+            this.selectOrCreateAddressBook();
+        }
+    }
+
+    private loadAddressBookFromCSV() : void{
+        this.rl.question("Enter the name of the Address Book to load from CSV: ", (bookName) => {
+            if (!this.addressBooks[bookName]) {
+                this.addressBooks[bookName] = new AddressBookMain(this.rl, () => this.selectOrCreateAddressBook());
+            }
+            this.currentBookName = bookName;
+            this.addressBooks[bookName].loadFromCSVFile(bookName);
         });
     }
 }

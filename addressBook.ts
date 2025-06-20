@@ -306,5 +306,41 @@ export class AddressBookMain {
         console.log(`Contacts loaded into '${bookName}' from file: ${filename}`);
         this.mainMenu();
     }
+
+    public saveToCSVFile(bookName: string): void{
+        if (this.contacts.length === 0) {
+            console.log(`No contacts to save in Address Book: ${bookName}`);
+            this.mainMenu();
+            return;
+        }
+
+        const filename = `${bookName}.txt`;
+        const header = "FirstName, LastName, Address, City, State, Zip, Phone, Email\n";
+        const row = this.contacts.map((value,index) => {
+            return `${value.firstname},${value.lastname},${value.address},${value.city},${value.state},${value.zip},${value.phone},${value.email}`;
+        });
+
+        const data = header + row.join('\n');
+
+        fs.writeFileSync(filename, data, 'utf8');
+        console.log(`Contacts saved to file: ${filename}`);
+        this.mainMenu();
+    }
+
+    public loadFromCSVFile(bookName: string): void{
+        const filename = `${bookName}.txt`;
+
+        if (!fs.existsSync(filename)) {
+            console.log(`File ${filename} not found. Cannot load contacts.`);
+            this.mainMenu();
+            return;
+        }
+
+        const data = fs.readFileSync(filename, 'utf8');
+        const lines = data.split('\n');
+
+        console.log(lines);
+
+    }
 }
 
