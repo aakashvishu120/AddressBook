@@ -307,16 +307,16 @@ export class AddressBookMain {
         this.mainMenu();
     }
 
-    public saveToCSVFile(bookName: string): void{
+    public saveToCSVFile(bookName: string): void {
         if (this.contacts.length === 0) {
             console.log(`No contacts to save in Address Book: ${bookName}`);
             this.mainMenu();
             return;
         }
 
-        const filename = `${bookName}.txt`;
+        const filename = `${bookName}.csv`;
         const header = "FirstName, LastName, Address, City, State, Zip, Phone, Email\n";
-        const row = this.contacts.map((value,index) => {
+        const row = this.contacts.map((value, index) => {
             return `${value.firstname},${value.lastname},${value.address},${value.city},${value.state},${value.zip},${value.phone},${value.email}`;
         });
 
@@ -327,8 +327,8 @@ export class AddressBookMain {
         this.mainMenu();
     }
 
-    public loadFromCSVFile(bookName: string): void{
-        const filename = `${bookName}.txt`;
+    public loadFromCSVFile(bookName: string): void {
+        const filename = `${bookName}.csv`;
 
         if (!fs.existsSync(filename)) {
             console.log(`File ${filename} not found. Cannot load contacts.`);
@@ -339,8 +339,24 @@ export class AddressBookMain {
         const data = fs.readFileSync(filename, 'utf8');
         const lines = data.split('\n');
 
-        console.log(lines);
+        //use slice for skipping header
+        this.contacts = lines.slice(1).map(line => {
+            const [firstname, lastname, address, city, state, zip, phone, email] = line.split(',');
 
+            return new Contact(
+                firstname?.trim() || "",
+                lastname?.trim() || "",
+                address?.trim() || "",
+                city?.trim() || "",
+                state?.trim() || "",
+                zip?.trim() || "",
+                phone?.trim() || "",
+                email?.trim() || ""
+            );
+        });
+
+        console.log(`Contacts loaded into '${bookName}' from CSV file: ${filename}`);
+        this.mainMenu();
     }
 }
 
